@@ -8,10 +8,10 @@ public class InputManager : MonoBehaviour
     private static InputManager _instance;
     private GameplayControls gameplayControls;
     public static InputManager Instance { get { return _instance; } }
-
+    private GameObject sword;
     private void Awake()
     {
-       
+        sword = GameObject.Find("MagicSword_Ice");
         if(_instance != null && _instance != this)
         {
             Destroy(this.gameObject);
@@ -22,6 +22,7 @@ public class InputManager : MonoBehaviour
         }
         gameplayControls = new GameplayControls();
         Cursor.visible = false;
+      
     }
 
     private void OnEnable()
@@ -44,7 +45,10 @@ public class InputManager : MonoBehaviour
         return gameplayControls.MainGameplayControls.Jump.triggered;
     }
 
-
+    public bool PressedMouse0()
+    {
+        return gameplayControls.MainGameplayControls.Attack.triggered;
+    }
 
 
 }

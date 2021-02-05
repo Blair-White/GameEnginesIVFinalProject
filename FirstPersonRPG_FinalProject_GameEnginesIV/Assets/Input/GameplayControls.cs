@@ -41,6 +41,14 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Attack"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""b558cfb6-533c-4825-8d34-629e55a43ad6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -120,6 +128,17 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2c2a34a4-884d-420c-a680-e3a588f9e014"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -131,6 +150,7 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         m_MainGameplayControls_Movement = m_MainGameplayControls.FindAction("Movement", throwIfNotFound: true);
         m_MainGameplayControls_Look = m_MainGameplayControls.FindAction("Look", throwIfNotFound: true);
         m_MainGameplayControls_Jump = m_MainGameplayControls.FindAction("Jump", throwIfNotFound: true);
+        m_MainGameplayControls_Attack = m_MainGameplayControls.FindAction("Attack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -183,6 +203,7 @@ public class @GameplayControls : IInputActionCollection, IDisposable
     private readonly InputAction m_MainGameplayControls_Movement;
     private readonly InputAction m_MainGameplayControls_Look;
     private readonly InputAction m_MainGameplayControls_Jump;
+    private readonly InputAction m_MainGameplayControls_Attack;
     public struct MainGameplayControlsActions
     {
         private @GameplayControls m_Wrapper;
@@ -190,6 +211,7 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         public InputAction @Movement => m_Wrapper.m_MainGameplayControls_Movement;
         public InputAction @Look => m_Wrapper.m_MainGameplayControls_Look;
         public InputAction @Jump => m_Wrapper.m_MainGameplayControls_Jump;
+        public InputAction @Attack => m_Wrapper.m_MainGameplayControls_Attack;
         public InputActionMap Get() { return m_Wrapper.m_MainGameplayControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -208,6 +230,9 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 @Jump.started -= m_Wrapper.m_MainGameplayControlsActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_MainGameplayControlsActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_MainGameplayControlsActionsCallbackInterface.OnJump;
+                @Attack.started -= m_Wrapper.m_MainGameplayControlsActionsCallbackInterface.OnAttack;
+                @Attack.performed -= m_Wrapper.m_MainGameplayControlsActionsCallbackInterface.OnAttack;
+                @Attack.canceled -= m_Wrapper.m_MainGameplayControlsActionsCallbackInterface.OnAttack;
             }
             m_Wrapper.m_MainGameplayControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -221,6 +246,9 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Attack.started += instance.OnAttack;
+                @Attack.performed += instance.OnAttack;
+                @Attack.canceled += instance.OnAttack;
             }
         }
     }
@@ -230,5 +258,6 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
     }
 }
