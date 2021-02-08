@@ -48,4 +48,11 @@ public class PlayerController : MonoBehaviour
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
     }
+
+    public void SkeleAttacked()
+    {
+        
+    }
+
+    
 }

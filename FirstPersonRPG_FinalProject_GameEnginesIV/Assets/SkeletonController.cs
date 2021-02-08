@@ -40,6 +40,7 @@ public class SkeletonController : MonoBehaviour
             case States.EnterChasing:
                 animator.SetBool("isChasing", true);
                 animator.SetBool("isIdle", false);
+                animator.SetBool("isFighting", false);
                 State = States.Chasing;
                 break;
             case States.Chasing:
@@ -47,6 +48,7 @@ public class SkeletonController : MonoBehaviour
                 { State = States.EnterFighting; }
                 else
                 {
+                    agent.isStopped = false;
                     agent.SetDestination(player.transform.position);
                 }
                     break;
@@ -58,6 +60,10 @@ public class SkeletonController : MonoBehaviour
                 State = States.Fighting;
                 break;
             case States.Fighting:
+                if (Vector3.Distance(transform.position, player.transform.position) > 4.5f)
+                { State = States.EnterChasing; }
+                //transform.LookAt(player.transform);
+                              
                 break;
             case States.Damaged:
                 break;
@@ -68,5 +74,10 @@ public class SkeletonController : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    void GotHit(int Damage)
+    {
+        Debug.Log("Skeleton Hit");
     }
 }
