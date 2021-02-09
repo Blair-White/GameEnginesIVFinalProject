@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 //This Script is copied directly from character.move on unity website.
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
+    public GameObject HealthBar, oHitFlash;
+    private float health, targetHealth, flashdelay; 
     private CharacterController controller;
     private Vector3 playerVelocity;
-    private bool groundedPlayer;
+    private bool groundedPlayer, hitFlash;
     [SerializeField]
     private float playerSpeed = 2.0f;
     [SerializeField]
@@ -16,13 +19,43 @@ public class PlayerController : MonoBehaviour
     private Transform cameraTransform;
     private void Start()
     {
+        health = 100; targetHealth = 100;
         controller = GetComponent<CharacterController>();
         inputManager = InputManager.Instance;
         cameraTransform = Camera.main.transform;
     }
 
+    private void FixedUpdate()
+    {
+        if (hitFlash)
+        {
+            flashdelay += Time.deltaTime;
+            if (flashdelay > 0.1f)
+            {
+                oHitFlash.SetActive(false);
+                hitFlash = false;
+                flashdelay = 0;
+            }
+
+        }
+    }
     void Update()
     {
+        
+        if(health != targetHealth)
+        {
+            if (health > targetHealth)
+            {
+                health -= 0.1f;
+            }
+            if(health < targetHealth)
+            {
+                health += 0.1f;
+            }
+        }
+
+        HealthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(health, 99);
+        
         groundedPlayer = controller.isGrounded;
         if (groundedPlayer && playerVelocity.y < 0)
         {
@@ -51,7 +84,9 @@ public class PlayerController : MonoBehaviour
 
     public void SkeleAttacked()
     {
-        
+        targetHealth -= 10;
+        hitFlash = true;
+        oHitFlash.SetActive(true);
     }
 
     

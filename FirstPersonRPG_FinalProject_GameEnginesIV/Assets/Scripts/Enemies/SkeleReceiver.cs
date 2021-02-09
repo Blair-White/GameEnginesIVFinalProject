@@ -6,6 +6,7 @@ public class SkeleReceiver : MonoBehaviour
 {
     void SkeleAttacked()
     {
-       
+        GameObject mplayer = GameObject.Find("Player");
+        mplayer.SendMessage("SkeleAttacked");
     }
 }

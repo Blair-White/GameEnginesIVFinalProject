@@ -62,7 +62,10 @@ public class SkeletonController : MonoBehaviour
             case States.Fighting:
                 if (Vector3.Distance(transform.position, player.transform.position) > 4.5f)
                 { State = States.EnterChasing; }
-                //transform.LookAt(player.transform);
+                var lookPos = player.transform.position - transform.position;
+                lookPos.y = 0;
+                var rot = Quaternion.LookRotation(lookPos);
+                transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * .1f);
                               
                 break;
             case States.Damaged:
