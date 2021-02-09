@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     public GameObject HealthBar, oHitFlash;
-    private float health, targetHealth, flashdelay; 
+    private float health, targetHealth, flashdelay, mDamage; 
     private CharacterController controller;
     private Vector3 playerVelocity;
     private bool groundedPlayer, hitFlash;
@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         inputManager = InputManager.Instance;
         cameraTransform = Camera.main.transform;
+        mDamage = 50f;
     }
 
     private void FixedUpdate()
@@ -104,7 +105,7 @@ public class PlayerController : MonoBehaviour
         if (AttackFrame == true)
         {
             AttackFrame = false;
-            enemy.SendMessage("GotHit", 10, SendMessageOptions.RequireReceiver);
+            enemy.SendMessage("GotHit", mDamage, SendMessageOptions.RequireReceiver);
         }      
     }
 

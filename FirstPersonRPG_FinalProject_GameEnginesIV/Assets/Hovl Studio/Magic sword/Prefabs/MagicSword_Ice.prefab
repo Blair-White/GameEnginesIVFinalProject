@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 23490559892862816}
   - component: {fileID: 5365151438948409212}
   - component: {fileID: 915229270260647355}
-  - component: {fileID: 5550679493967300198}
+  - component: {fileID: 3577808964428403595}
   m_Layer: 0
   m_Name: MagicSword_Ice
   m_TagString: Untagged
@@ -116,16 +116,17 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!135 &5550679493967300198
-SphereCollider:
+--- !u!136 &3577808964428403595
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1777591198242490}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.97
-  m_Center: {x: -0.000052961965, y: 0.03, z: 1.94}
+  m_Radius: 1.3341236
+  m_Height: 5.2
+  m_Direction: 2
+  m_Center: {x: 0, y: 0, z: 2.62}

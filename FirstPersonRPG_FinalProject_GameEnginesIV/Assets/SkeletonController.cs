@@ -8,7 +8,7 @@ public class SkeletonController : MonoBehaviour
     public GameObject ModelObject, player;
     private bool ishit;
     public Animator animator;
-    public float moveSpeed;
+    public float moveSpeed, health;
     public NavMeshAgent agent;
     public enum States
     {
@@ -18,6 +18,7 @@ public class SkeletonController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        health = 100;
         State = States.EnterIdle;
         animator = ModelObject.GetComponent<Animator>();
         player = GameObject.Find("Player");
@@ -68,14 +69,23 @@ public class SkeletonController : MonoBehaviour
                 var lookPos = player.transform.position - transform.position;
                 lookPos.y = 0;
                 var rot = Quaternion.LookRotation(lookPos);
-                transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * .1f);
-                              
+                transform.rotation = Quaternion.Slerp(transform.rotation, rot, 5.0f);
+                
                 break;
             case States.Damaged:
                 break;
             case States.Dying:
                 break;
+            case States.EnterDead:
+                animator.SetBool("isFighting", false);
+                animator.SetBool("isIdle", false);
+                animator.SetBool("isChasing", false);
+                animator.SetBool("isHit", false);
+                animator.SetBool("isDead", true);
+                State = States.Dead;
+                break;
             case States.Dead:
+               
                 break;
             default:
                 break;
@@ -84,8 +94,6 @@ public class SkeletonController : MonoBehaviour
 
     public void hitFinished() 
     {
-        
-        
         if (Vector3.Distance(transform.position, player.transform.position) < 4.5f)
         { State = States.EnterFighting; animator.SetBool("isFighting", true); }
         else
@@ -97,12 +105,17 @@ public class SkeletonController : MonoBehaviour
     }
     void GotHit(int Damage)
     {
+        health -= Damage;
+        if (State == States.Dead) {   return; }
+        if (health <= 0) State = States.EnterDead;
         ishit = true;
         Debug.Log("Skeleton Hit");
         animator.SetBool("isHit", true);
         animator.SetBool("isFighting", false);
         animator.SetBool("isIdle", false);
         animator.SetBool("isChasing", false);
+      
+        
     }
     private void OnTriggerStay(Collider other)
     {
