@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController controller;
     private Vector3 playerVelocity;
     private bool groundedPlayer, hitFlash;
+    public bool AttackFrame;
     [SerializeField]
     private float playerSpeed = 2.0f;
     [SerializeField]
@@ -17,6 +18,7 @@ public class PlayerController : MonoBehaviour
     private float gravityValue = -9.81f;
     private InputManager inputManager;
     private Transform cameraTransform;
+    private int iAttackcount;
     private void Start()
     {
         health = 100; targetHealth = 100;
@@ -39,9 +41,17 @@ public class PlayerController : MonoBehaviour
 
         }
     }
-    void Update()
+    private void LateUpdate()
     {
         
+
+ 
+
+       
+
+    }
+    void Update()
+    {
         if(health != targetHealth)
         {
             if (health > targetHealth)
@@ -89,5 +99,22 @@ public class PlayerController : MonoBehaviour
         oHitFlash.SetActive(true);
     }
 
+    void SkeleHit(GameObject enemy)
+    {
+        if (AttackFrame == true)
+        {
+            AttackFrame = false;
+            enemy.SendMessage("GotHit", 10, SendMessageOptions.RequireReceiver);
+        }      
+    }
+
+    void Attacked()
+    {
+        AttackFrame = true;
+    }
+    void AttackEnded()
+    {
+        AttackFrame = false;
+    }
     
 }

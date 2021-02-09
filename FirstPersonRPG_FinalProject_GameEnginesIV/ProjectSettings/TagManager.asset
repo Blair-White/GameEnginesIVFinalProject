@@ -6,6 +6,7 @@ TagManager:
   tags:
   - WalkableFloor
   - EnemyAttackable
+  - PlayerWeapon
   layers:
   - Default
   - TransparentFX

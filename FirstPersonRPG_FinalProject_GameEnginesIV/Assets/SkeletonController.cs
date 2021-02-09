@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class SkeletonController : MonoBehaviour
 {
     public GameObject ModelObject, player;
+    private bool ishit;
     public Animator animator;
     public float moveSpeed;
     public NavMeshAgent agent;
@@ -29,11 +30,13 @@ public class SkeletonController : MonoBehaviour
         {
             case States.EnterIdle:
                 animator.SetBool("isIdle", true);
+                animator.SetBool("isHit", false);
+                ishit = false;
                 State = States.Idle;
                 break;
             case States.Idle:
                 if(Vector3.Distance(transform.position, player.transform.position) < 15.0f)
-                { Debug.Log("Player in Range"); State = States.EnterChasing; }
+                { State = States.EnterChasing; }
 
                 break;
 
@@ -79,8 +82,33 @@ public class SkeletonController : MonoBehaviour
         }
     }
 
+    public void hitFinished() 
+    {
+        
+        
+        if (Vector3.Distance(transform.position, player.transform.position) < 4.5f)
+        { State = States.EnterFighting; animator.SetBool("isFighting", true); }
+        else
+        {
+            State = States.EnterIdle;
+            
+        }
+        animator.SetBool("isHit", false);
+    }
     void GotHit(int Damage)
     {
+        ishit = true;
         Debug.Log("Skeleton Hit");
+        animator.SetBool("isHit", true);
+        animator.SetBool("isFighting", false);
+        animator.SetBool("isIdle", false);
+        animator.SetBool("isChasing", false);
+    }
+    private void OnTriggerStay(Collider other)
+    {
+        if(other.gameObject.tag == "PlayerWeapon")
+        {
+            player.SendMessage("SkeleHit", this.gameObject);
+        }
     }
 }

@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class SwordController : MonoBehaviour
 {
+    private GameObject mplayer;
     public Animator animator;
     private bool isAttacking, checkHit;
     private float delayAttack;
     // Start is called before the first frame update
     void Start()
     {
+        mplayer = GameObject.Find("Player");
         animator.SetBool("PressedAttack", false);
     }
 
@@ -33,21 +35,12 @@ public class SwordController : MonoBehaviour
     public void AttackFinished()
     {
         animator.SetBool("PressedAttack", false);
+        mplayer.SendMessage("AttackEnded");
     }
     public void AttackHit()
     {
         checkHit = true;
-    }
-
-    private void OnCollisionStay(Collision collision)
-    {
-        if(checkHit)
-        {
-            if(collision.gameObject.tag == "EnemyAttackable")
-            {
-                collision.gameObject.SendMessage("GotHit", 10, SendMessageOptions.RequireReceiver);
-            }
-        }
+        mplayer.SendMessage("Attacked");
     }
 }
 
