@@ -10,6 +10,7 @@ public class SkeletonController : MonoBehaviour
     public Animator animator;
     public float moveSpeed, health;
     public NavMeshAgent agent;
+    public float myExpValue;
     public enum States
     {
        EnterIdle, Idle, EnterChasing, Chasing, EnterFighting, Fighting, EnterDamaged, Damaged, EnterDying, Dying, EnterDead, Dead
@@ -83,6 +84,7 @@ public class SkeletonController : MonoBehaviour
                 animator.SetBool("isHit", false);
                 animator.SetBool("isDead", true);
                 State = States.Dead;
+                player.SendMessage("GrantExp", myExpValue);
                 break;
             case States.Dead:
                

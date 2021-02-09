@@ -64,7 +64,9 @@ MonoBehaviour:
   player: {fileID: 0}
   animator: {fileID: 0}
   moveSpeed: 0
+  health: 0
   agent: {fileID: 8643429615931052930}
+  myExpValue: 25
   State: 0
 --- !u!195 &8643429615931052930
 NavMeshAgent:

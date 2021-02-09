@@ -4,8 +4,10 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    public GameObject HealthBar, oHitFlash;
-    private float health, targetHealth, flashdelay, mDamage; 
+    public GameObject HealthBar, ExpBar, oHitFlash, LevelupEffect, LevelUpUI;
+    private float health, exp, totalExpNeeded, expCalc, targetexpCalc, targetHealth, flashdelay, mDamage;
+    public float[] levelupExps;
+    private int myLevel;
     private CharacterController controller;
     private Vector3 playerVelocity;
     private bool groundedPlayer, hitFlash;
@@ -21,6 +23,9 @@ public class PlayerController : MonoBehaviour
     private int iAttackcount;
     private void Start()
     {
+        myLevel = 1;
+        totalExpNeeded = levelupExps[myLevel];
+        expCalc = 0; targetexpCalc = 0; exp = 0;
         health = 100; targetHealth = 100;
         controller = GetComponent<CharacterController>();
         inputManager = InputManager.Instance;
@@ -65,8 +70,23 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        if (expCalc != targetexpCalc)
+        {
+            if (expCalc > targetexpCalc)
+            {
+                expCalc -= 0.1f;
+            }
+            if (expCalc < targetexpCalc)
+            {
+                expCalc += 0.1f;
+            }
+        }
+
+        if (expCalc >= 100) LevelUp();
+
         HealthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(health, 99);
-        
+        ExpBar.GetComponent<RectTransform>().sizeDelta = new Vector2(expCalc, 99);
+
         groundedPlayer = controller.isGrounded;
         if (groundedPlayer && playerVelocity.y < 0)
         {
@@ -118,4 +138,17 @@ public class PlayerController : MonoBehaviour
         AttackFrame = false;
     }
     
+    public void GrantExp(float granted)
+    {
+        exp += granted;
+        targetexpCalc = exp / totalExpNeeded * 100;
+    }
+
+    private void LevelUp()
+    {
+        myLevel++;
+        exp = 0;
+        targetexpCalc = 0;
+        totalExpNeeded = levelupExps[myLevel];
+    }
 }

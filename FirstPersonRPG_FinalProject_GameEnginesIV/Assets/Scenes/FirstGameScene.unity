@@ -424,7 +424,7 @@ GameObject:
   - component: {fileID: 73577902}
   - component: {fileID: 73577901}
   m_Layer: 5
-  m_Name: HealthBar (1)
+  m_Name: expbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2759,7 +2759,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HealthBar: {fileID: 1541146992}
+  ExpBar: {fileID: 73577899}
   oHitFlash: {fileID: 836185081}
+  levelupExps:
+  - 9999999
+  - 50
+  - 75
+  - 100
+  - 125
+  - 150
+  - 9999999
+  - 9999999
+  - 9999999
+  - 9999999
   AttackFrame: 0
   playerSpeed: 5
   jumpHeight: 1
