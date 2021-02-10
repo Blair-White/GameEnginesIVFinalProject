@@ -2761,6 +2761,9 @@ MonoBehaviour:
   HealthBar: {fileID: 1541146992}
   ExpBar: {fileID: 73577899}
   oHitFlash: {fileID: 836185081}
+  LevelupEffect: {fileID: 0}
+  LevelUpUI: {fileID: 0}
+  Sword: {fileID: 380230540}
   levelupExps:
   - 9999999
   - 50

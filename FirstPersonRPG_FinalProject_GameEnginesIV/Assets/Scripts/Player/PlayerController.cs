@@ -4,7 +4,8 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    public GameObject HealthBar, ExpBar, oHitFlash, LevelupEffect, LevelUpUI;
+    //clean this all up if time.
+    public GameObject HealthBar, ExpBar, oHitFlash, LevelupEffect, LevelUpUI, Sword;
     private float health, exp, totalExpNeeded, expCalc, targetexpCalc, targetHealth, flashdelay, mDamage;
     public float[] levelupExps;
     private int myLevel;
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviour
     private InputManager inputManager;
     private Transform cameraTransform;
     private int iAttackcount;
+    private Vector3 lastPos;
     private void Start()
     {
         myLevel = 1;
@@ -58,6 +60,12 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
+        Vector3 currentPos = transform.position;
+        if (currentPos != lastPos && !Sword.GetComponent<SwordController>().isWalking) Sword.SendMessage("Walking");
+        else
+        if (currentPos == lastPos && Sword.GetComponent<SwordController>().isWalking) Sword.SendMessage("StoppedWalking");
+        lastPos = currentPos;
+
         if(health != targetHealth)
         {
             if (health > targetHealth)

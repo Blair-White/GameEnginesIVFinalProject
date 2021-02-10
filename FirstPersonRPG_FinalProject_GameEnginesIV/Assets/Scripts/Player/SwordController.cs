@@ -7,6 +7,7 @@ public class SwordController : MonoBehaviour
     private GameObject mplayer;
     public Animator animator;
     private bool isAttacking, checkHit;
+    public bool isWalking;
     private float delayAttack;
     // Start is called before the first frame update
     void Start()
@@ -41,6 +42,17 @@ public class SwordController : MonoBehaviour
     {
         checkHit = true;
         mplayer.SendMessage("Attacked");
+    }
+
+    private void Walking()
+    {
+        animator.SetBool("isWalking", true);
+        isWalking = true;
+    }
+    private void StoppedWalking()
+    {
+        animator.SetBool("isWalking", false);
+        isWalking = false;
     }
 }
 
