@@ -5,13 +5,13 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     //clean this all up if time.
-    public GameObject HealthBar, ExpBar, oHitFlash, LevelupEffect, LevelUpUI, Sword;
+    public GameObject HealthBar, ExpBar, oHitFlash, LevelupEffect, LevelUpUI, Sword, ShieldedBar, UiController, level1, level2;
     private float health, exp, totalExpNeeded, expCalc, targetexpCalc, targetHealth, flashdelay, mDamage;
     public float[] levelupExps;
     private int myLevel;
     private CharacterController controller;
     private Vector3 playerVelocity;
-    private bool groundedPlayer, hitFlash;
+    private bool groundedPlayer, hitFlash, empowered, shielded;
     public bool AttackFrame;
     [SerializeField]
     private float playerSpeed = 2.0f;
@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
     private Transform cameraTransform;
     private int iAttackcount;
     private Vector3 lastPos;
+    //talent bools
+    public bool StoneSkin, Poison, Gift, Prayer, Regeneration, Runes;
     private void Start()
     {
         myLevel = 1;
@@ -40,7 +42,7 @@ public class PlayerController : MonoBehaviour
         if (hitFlash)
         {
             flashdelay += Time.deltaTime;
-            if (flashdelay > 0.1f)
+            if (flashdelay > 0.05f)
             {
                 oHitFlash.SetActive(false);
                 hitFlash = false;
@@ -123,18 +125,34 @@ public class PlayerController : MonoBehaviour
 
     public void SkeleAttacked()
     {
-        targetHealth -= 10;
-        hitFlash = true;
-        oHitFlash.SetActive(true);
+        if(!shielded)
+        {
+            targetHealth -= 10;
+            hitFlash = true;
+            oHitFlash.SetActive(true);
+            oHitFlash.GetComponent<Image>().color = Color.red;
+        }
+        else
+        {
+            oHitFlash.SetActive(true);
+            hitFlash = true;
+            oHitFlash.GetComponent<Image>().color = Color.cyan;
+            if (shielded) Unshield();
+        }
     }
 
     void SkeleHit(GameObject enemy)
     {
+        float applyDamage;
+        if (!empowered) applyDamage = mDamage; else applyDamage = mDamage * 2;
+
         if (AttackFrame == true)
         {
             AttackFrame = false;
-            enemy.SendMessage("GotHit", mDamage, SendMessageOptions.RequireReceiver);
-        }      
+            enemy.SendMessage("GotHit", applyDamage, SendMessageOptions.RequireReceiver);
+            if (empowered) UnEmpower();
+        }
+        
     }
 
     void Attacked()
@@ -151,6 +169,12 @@ public class PlayerController : MonoBehaviour
         exp += granted;
         targetexpCalc = exp / totalExpNeeded * 100;
     }
+
+    private void Empower() { empowered = true; Sword.SendMessage("SetEmpoweredMat"); }
+
+    private void UnEmpower() { empowered = false; Sword.SendMessage("SetNormalMat"); UiController.SendMessage("EmpowerEnded"); }
+    private void ShieldMe() { shielded = true; ShieldedBar.SetActive(true); }
+    private void Unshield() { shielded = false; ShieldedBar.SetActive(false); UiController.SendMessage("ShieldEnded"); }
 
     private void LevelUp()
     {

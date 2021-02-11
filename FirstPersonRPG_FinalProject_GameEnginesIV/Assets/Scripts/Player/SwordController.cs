@@ -6,7 +6,9 @@ public class SwordController : MonoBehaviour
 {
     private GameObject mplayer;
     public Animator animator;
-    private bool isAttacking, checkHit;
+    public Material NormalMat, EmpoweredMat;
+    private bool isAttacking;
+    public bool checkHit;
     public bool isWalking;
     private float delayAttack;
     // Start is called before the first frame update
@@ -54,5 +56,8 @@ public class SwordController : MonoBehaviour
         animator.SetBool("isWalking", false);
         isWalking = false;
     }
+
+    void SetEmpoweredMat() { this.GetComponent<MeshRenderer>().material = EmpoweredMat; }
+    void SetNormalMat() { this.GetComponent<MeshRenderer>().material = NormalMat; }
 }
 

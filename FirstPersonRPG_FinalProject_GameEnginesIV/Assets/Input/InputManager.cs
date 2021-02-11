@@ -50,5 +50,14 @@ public class InputManager : MonoBehaviour
         return gameplayControls.MainGameplayControls.Attack.triggered;
     }
 
+    public bool PressedAbilityOne()
+    {
+        return gameplayControls.MainGameplayControls.AbilityOne.triggered;
+    }
+
+    public bool PressedAbilityTwo()
+    {
+        return gameplayControls.MainGameplayControls.AbilityTwo.triggered;
+    }
 
 }

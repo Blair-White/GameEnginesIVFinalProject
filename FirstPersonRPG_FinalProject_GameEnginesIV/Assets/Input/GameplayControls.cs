@@ -49,6 +49,22 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""AbilityOne"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""911e8b75-c1f3-4655-b4af-aa76a00df9a7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""AbilityTwo"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""bf0332b2-c8e0-49b4-a5ac-50c0b98d8f5c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -139,6 +155,28 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                     ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b5f47628-204c-4164-8a3f-3de37d4fdc7a"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AbilityOne"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""27e08300-4871-4183-8ec7-bb665f06c271"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AbilityTwo"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -151,6 +189,8 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         m_MainGameplayControls_Look = m_MainGameplayControls.FindAction("Look", throwIfNotFound: true);
         m_MainGameplayControls_Jump = m_MainGameplayControls.FindAction("Jump", throwIfNotFound: true);
         m_MainGameplayControls_Attack = m_MainGameplayControls.FindAction("Attack", throwIfNotFound: true);
+        m_MainGameplayControls_AbilityOne = m_MainGameplayControls.FindAction("AbilityOne", throwIfNotFound: true);
+        m_MainGameplayControls_AbilityTwo = m_MainGameplayControls.FindAction("AbilityTwo", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -204,6 +244,8 @@ public class @GameplayControls : IInputActionCollection, IDisposable
     private readonly InputAction m_MainGameplayControls_Look;
     private readonly InputAction m_MainGameplayControls_Jump;
     private readonly InputAction m_MainGameplayControls_Attack;
+    private readonly InputAction m_MainGameplayControls_AbilityOne;
+    private readonly InputAction m_MainGameplayControls_AbilityTwo;
     public struct MainGameplayControlsActions
     {
         private @GameplayControls m_Wrapper;
@@ -212,6 +254,8 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         public InputAction @Look => m_Wrapper.m_MainGameplayControls_Look;
         public InputAction @Jump => m_Wrapper.m_MainGameplayControls_Jump;
         public InputAction @Attack => m_Wrapper.m_MainGameplayControls_Attack;
+        public InputAction @AbilityOne => m_Wrapper.m_MainGameplayControls_AbilityOne;
+        public InputAction @AbilityTwo => m_Wrapper.m_MainGameplayControls_AbilityTwo;
         public InputActionMap Get() { return m_Wrapper.m_MainGameplayControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -233,6 +277,12 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 @Attack.started -= m_Wrapper.m_MainGameplayControlsActionsCallbackInterface.OnAttack;
                 @Attack.performed -= m_Wrapper.m_MainGameplayControlsActionsCallbackInterface.OnAttack;
                 @Attack.canceled -= m_Wrapper.m_MainGameplayControlsActionsCallbackInterface.OnAttack;
+                @AbilityOne.started -= m_Wrapper.m_MainGameplayControlsActionsCallbackInterface.OnAbilityOne;
+                @AbilityOne.performed -= m_Wrapper.m_MainGameplayControlsActionsCallbackInterface.OnAbilityOne;
+                @AbilityOne.canceled -= m_Wrapper.m_MainGameplayControlsActionsCallbackInterface.OnAbilityOne;
+                @AbilityTwo.started -= m_Wrapper.m_MainGameplayControlsActionsCallbackInterface.OnAbilityTwo;
+                @AbilityTwo.performed -= m_Wrapper.m_MainGameplayControlsActionsCallbackInterface.OnAbilityTwo;
+                @AbilityTwo.canceled -= m_Wrapper.m_MainGameplayControlsActionsCallbackInterface.OnAbilityTwo;
             }
             m_Wrapper.m_MainGameplayControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -249,6 +299,12 @@ public class @GameplayControls : IInputActionCollection, IDisposable
                 @Attack.started += instance.OnAttack;
                 @Attack.performed += instance.OnAttack;
                 @Attack.canceled += instance.OnAttack;
+                @AbilityOne.started += instance.OnAbilityOne;
+                @AbilityOne.performed += instance.OnAbilityOne;
+                @AbilityOne.canceled += instance.OnAbilityOne;
+                @AbilityTwo.started += instance.OnAbilityTwo;
+                @AbilityTwo.performed += instance.OnAbilityTwo;
+                @AbilityTwo.canceled += instance.OnAbilityTwo;
             }
         }
     }
@@ -259,5 +315,7 @@ public class @GameplayControls : IInputActionCollection, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
+        void OnAbilityOne(InputAction.CallbackContext context);
+        void OnAbilityTwo(InputAction.CallbackContext context);
     }
 }

@@ -6,11 +6,12 @@ using UnityEngine.AI;
 public class SkeletonController : MonoBehaviour
 {
     public GameObject ModelObject, player;
-    private bool ishit;
+    public bool ishit;
     public Animator animator;
     public float moveSpeed, health;
     public NavMeshAgent agent;
     public float myExpValue;
+    
     public enum States
     {
        EnterIdle, Idle, EnterChasing, Chasing, EnterFighting, Fighting, EnterDamaged, Damaged, EnterDying, Dying, EnterDead, Dead
@@ -111,7 +112,6 @@ public class SkeletonController : MonoBehaviour
         if (State == States.Dead) {   return; }
         if (health <= 0) State = States.EnterDead;
         ishit = true;
-        Debug.Log("Skeleton Hit");
         animator.SetBool("isHit", true);
         animator.SetBool("isFighting", false);
         animator.SetBool("isIdle", false);
