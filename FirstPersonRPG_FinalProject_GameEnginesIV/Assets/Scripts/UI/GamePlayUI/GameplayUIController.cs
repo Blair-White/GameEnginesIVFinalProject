@@ -9,6 +9,7 @@ public class GameplayUIController : MonoBehaviour
     private RectTransform imgAbilityOneCooldown, imgAbilityTwoCooldown;
     private int flickerCount;
     private float coolDownOne, coolDownTwo, CdRate1, CdRate2;
+    public Texture2D mousetexture;
     void Start()
     {
         mPlayer = GameObject.Find("Player");
@@ -17,6 +18,7 @@ public class GameplayUIController : MonoBehaviour
         coolDownOne = 1; coolDownTwo = 1; CdRate1 = 0.0003f; CdRate2 = 0.0001f;
         AbilityOneAvailable = true;
         AbilityTwoAvailable = true;
+        Cursor.SetCursor(mousetexture, new Vector2(0,0), CursorMode.Auto);
     }
 
     void Update()
@@ -73,4 +75,6 @@ public class GameplayUIController : MonoBehaviour
 
     void ShieldEnded() { CoolingTwo = true; imgAbilityTwoCooldown.localScale = new Vector3(1, 1, 1); }
     void EmpowerEnded() { CoolingOne = true; imgAbilityOneCooldown.localScale = new Vector3(1, 1, 1); }
+
+    void GiftSelect() { CdRate1 = CdRate1 * 1.75f; CdRate2 = CdRate2 * 1.75f; }
 }

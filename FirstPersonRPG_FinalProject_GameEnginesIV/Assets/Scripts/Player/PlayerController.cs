@@ -5,10 +5,11 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     //clean this all up if time.
-    public GameObject HealthBar, ExpBar, oHitFlash, LevelupEffect, LevelUpUI, Sword, ShieldedBar, UiController, level1, level2;
+    public GameObject HealthBar, ExpBar, oHitFlash, LevelupEffect, LevelUpUI, Sword, ShieldedBar, UiController, level1, level2, faceeffectlocation, regenEffect, HitEffect;
     private float health, exp, totalExpNeeded, expCalc, targetexpCalc, targetHealth, flashdelay, mDamage;
+    private float StoneSkinReduction, giftcooldown, regenAmount, regenCount;
     public float[] levelupExps;
-    private int myLevel;
+    private int myLevel, empowermultiplier, prayercharges;
     private CharacterController controller;
     private Vector3 playerVelocity;
     private bool groundedPlayer, hitFlash, empowered, shielded;
@@ -34,7 +35,14 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         inputManager = InputManager.Instance;
         cameraTransform = Camera.main.transform;
-        mDamage = 50f;
+        mDamage = 25f;
+        StoneSkinReduction = 0;
+        level1 = GameObject.Find("LevelUp1"); level2 = GameObject.Find("LevelUp2");
+        level1.SetActive(false); level2.SetActive(false);
+        empowermultiplier = 2;
+        giftcooldown = .5f;
+        prayercharges = 1;
+        regenAmount = 5;
     }
 
     private void FixedUpdate()
@@ -62,6 +70,18 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
+        if(Regeneration)
+        {
+            regenCount += Time.deltaTime;
+            if(regenCount > 3)
+            {
+                targetHealth += regenAmount;
+                regenCount = 0;
+                Instantiate(regenEffect, faceeffectlocation.transform);
+            }
+        }
+
+
         Vector3 currentPos = transform.position;
         if (currentPos != lastPos && !Sword.GetComponent<SwordController>().isWalking) Sword.SendMessage("Walking");
         else
@@ -127,7 +147,7 @@ public class PlayerController : MonoBehaviour
     {
         if(!shielded)
         {
-            targetHealth -= 10;
+            targetHealth -= (10 - StoneSkinReduction);
             hitFlash = true;
             oHitFlash.SetActive(true);
             oHitFlash.GetComponent<Image>().color = Color.red;
@@ -137,21 +157,34 @@ public class PlayerController : MonoBehaviour
             oHitFlash.SetActive(true);
             hitFlash = true;
             oHitFlash.GetComponent<Image>().color = Color.cyan;
-            if (shielded) Unshield();
+            if (shielded)
+            {
+                if (Prayer) if (prayercharges == 0) { Unshield(); }
+                if (Prayer) if (prayercharges > 0) { prayercharges--; return; }
+                if (!Prayer) { Unshield(); }
+            }
+                
         }
     }
 
     void SkeleHit(GameObject enemy)
     {
         float applyDamage;
-        if (!empowered) applyDamage = mDamage; else applyDamage = mDamage * 2;
+        if (!empowered) applyDamage = mDamage; else applyDamage = mDamage * empowermultiplier;
 
         if (AttackFrame == true)
         {
             AttackFrame = false;
             enemy.SendMessage("GotHit", applyDamage, SendMessageOptions.RequireReceiver);
             if (empowered) UnEmpower();
+            Instantiate(HitEffect, enemy.transform);
         }
+
+        if(Poison)
+        {
+            enemy.SendMessage("Poisoned");
+        }
+
         
     }
 
@@ -178,9 +211,21 @@ public class PlayerController : MonoBehaviour
 
     private void LevelUp()
     {
+        Cursor.visible = true;
+        //temp system to get it just done quick
+        if (myLevel == 1) { level1.SetActive(true); }
+        if(myLevel == 2) { level2.SetActive(true); }
         myLevel++;
         exp = 0;
         targetexpCalc = 0;
         totalExpNeeded = levelupExps[myLevel];
     }
+    
+    public void PoisonSelect() { Poison = true; level1.SetActive(false); Cursor.visible = false; }
+    public void StoneSkinSelect() { StoneSkin = true; StoneSkinReduction = 2.5f; level1.SetActive(false); Cursor.visible = false; }
+    public void GiftSelect() { Gift = true; level1.SetActive(false); Cursor.visible = false; UiController.SendMessage("GiftSelect"); }
+    public void PrayerSelect() { Prayer = true; level2.SetActive(false); Cursor.visible = false; }
+    public void RunesSelect() { Runes = true; level2.SetActive(false); Cursor.visible = false; empowermultiplier = 3; }
+    public void RegenerationSelect() { Regeneration = true; level2.SetActive(false); Cursor.visible = false; }
 }
+// public bool StoneSkin, Poison, Gift, Prayer, Regeneration, Runes;

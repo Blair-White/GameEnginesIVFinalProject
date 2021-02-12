@@ -62,10 +62,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ModelObject: {fileID: 8953537448620070772}
   player: {fileID: 0}
+  poisoneffect: {fileID: 100002, guid: c17698f595aa942cab4326f0ffaf25c2, type: 3}
+  ishit: 0
+  isPoisoned: 0
   animator: {fileID: 0}
   moveSpeed: 0
   health: 0
   agent: {fileID: 8643429615931052930}
+  mcollider: {fileID: 2343031858637772814}
   myExpValue: 25
   State: 0
 --- !u!195 &8643429615931052930

@@ -5,11 +5,13 @@ using UnityEngine.AI;
 
 public class SkeletonController : MonoBehaviour
 {
-    public GameObject ModelObject, player;
-    public bool ishit;
+    public GameObject ModelObject, player, poisoneffect;
+    public bool ishit, isPoisoned;
     public Animator animator;
     public float moveSpeed, health;
+    private float poisonTick;
     public NavMeshAgent agent;
+    public Collider mcollider;
     public float myExpValue;
     
     public enum States
@@ -29,6 +31,8 @@ public class SkeletonController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isPoisoned) { poisonTick += Time.deltaTime; if (poisonTick > 3) {GotHit(10); poisonTick = 0; Instantiate(poisoneffect, this.transform); } }
+
         switch (State)
         {
             case States.EnterIdle:
@@ -79,6 +83,8 @@ public class SkeletonController : MonoBehaviour
             case States.Dying:
                 break;
             case States.EnterDead:
+                if (isPoisoned) isPoisoned = false;
+                mcollider.enabled = false;
                 animator.SetBool("isFighting", false);
                 animator.SetBool("isIdle", false);
                 animator.SetBool("isChasing", false);
@@ -86,6 +92,7 @@ public class SkeletonController : MonoBehaviour
                 animator.SetBool("isDead", true);
                 State = States.Dead;
                 player.SendMessage("GrantExp", myExpValue);
+                agent.isStopped = true;
                 break;
             case States.Dead:
                
@@ -110,7 +117,7 @@ public class SkeletonController : MonoBehaviour
     {
         health -= Damage;
         if (State == States.Dead) {   return; }
-        if (health <= 0) State = States.EnterDead;
+        if (health <= 0) { State = States.EnterDead; if (isPoisoned) isPoisoned = false; }
         ishit = true;
         animator.SetBool("isHit", true);
         animator.SetBool("isFighting", false);
@@ -126,4 +133,6 @@ public class SkeletonController : MonoBehaviour
             player.SendMessage("SkeleHit", this.gameObject);
         }
     }
+
+    private void Poisoned() { isPoisoned = true; }
 }
