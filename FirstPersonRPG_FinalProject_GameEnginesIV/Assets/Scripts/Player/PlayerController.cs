@@ -79,6 +79,7 @@ public class PlayerController : MonoBehaviour
                 targetHealth += regenAmount;
                 regenCount = 0;
                 Instantiate(regenEffect, faceeffectlocation.transform);
+                Soundmanager.instance.PlaySoundOneShot(Soundmanager.instance.SpellHeal, .5f);
             }
         }
         if (targetHealth > 100) targetHealth = 100;
@@ -154,6 +155,7 @@ public class PlayerController : MonoBehaviour
             hitFlash = true;
             oHitFlash.SetActive(true);
             oHitFlash.GetComponent<Image>().color = Color.red;
+            Soundmanager.instance.PlaySoundOneShot(Soundmanager.instance.FleshImpact, .5f);
         }
         else
         {
@@ -165,6 +167,7 @@ public class PlayerController : MonoBehaviour
                 if (Prayer) if (prayercharges == 0) { Unshield();  return; }
                 if (Prayer) if (prayercharges > 0) { prayercharges--; return; }
                 if (!Prayer) { Unshield(); }
+                Soundmanager.instance.PlaySoundOneShot(Soundmanager.instance.StepArmor, .5f);
             }
                 
         }
@@ -181,11 +184,14 @@ public class PlayerController : MonoBehaviour
             enemy.SendMessage("GotHit", applyDamage, SendMessageOptions.RequireReceiver);
             if (empowered) UnEmpower();
             Instantiate(HitEffect, enemy.transform);
+            Soundmanager.instance.PlaySoundOneShot(Soundmanager.instance.MonsterHit, .5f);
+            Soundmanager.instance.PlaySoundOneShot(Soundmanager.instance.BoneImpact, .6f);
         }
 
         if(Poison)
         {
             enemy.SendMessage("Poisoned");
+            Soundmanager.instance.PlaySoundOneShot(Soundmanager.instance.MonsterHit, .5f);
         }
 
         
@@ -194,6 +200,7 @@ public class PlayerController : MonoBehaviour
     void Attacked()
     {
         AttackFrame = true;
+        Soundmanager.instance.PlaySoundOneShot(Soundmanager.instance.SwordSwing, .5f);
     }
     void AttackEnded()
     {
@@ -209,7 +216,7 @@ public class PlayerController : MonoBehaviour
     private void Empower() { empowered = true; Sword.SendMessage("SetEmpoweredMat"); }
 
     private void UnEmpower() { empowered = false; Sword.SendMessage("SetNormalMat"); UiController.SendMessage("EmpowerEnded"); }
-    private void ShieldMe() { shielded = true; ShieldedBar.SetActive(true); if (Prayer) prayercharges = 1; }
+    private void ShieldMe() { shielded = true; ShieldedBar.SetActive(true); if (Prayer) prayercharges = 1; Soundmanager.instance.PlaySoundOneShot(Soundmanager.instance.SpellAir, .5f); }
     private void Unshield() { shielded = false; ShieldedBar.SetActive(false); UiController.SendMessage("ShieldEnded");prayercharges = 1; }
 
     private void LevelUp()

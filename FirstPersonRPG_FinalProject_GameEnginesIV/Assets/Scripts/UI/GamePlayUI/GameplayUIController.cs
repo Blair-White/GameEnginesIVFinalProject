@@ -49,6 +49,7 @@ public class GameplayUIController : MonoBehaviour
         coolDownOne = 1;
         AbilityOneAvailable = false;
         mPlayer.SendMessage("Empower");
+        Soundmanager.instance.PlaySoundOneShot(Soundmanager.instance.SpellFireBall, .5f);
     }
 
     void ActivateAbilityTwo()
