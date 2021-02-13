@@ -7,6 +7,7 @@ TagManager:
   - WalkableFloor
   - EnemyAttackable
   - PlayerWeapon
+  - EndPortal
   layers:
   - Default
   - TransparentFX

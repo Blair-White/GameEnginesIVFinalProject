@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 //This Script is copied directly from character.move on unity website.
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
@@ -80,7 +81,9 @@ public class PlayerController : MonoBehaviour
                 Instantiate(regenEffect, faceeffectlocation.transform);
             }
         }
-
+        if (targetHealth > 100) targetHealth = 100;
+        if (targetHealth < 0) targetHealth = 0;
+        if (targetHealth <= 0) { SceneManager.LoadScene(4); }
 
         Vector3 currentPos = transform.position;
         if (currentPos != lastPos && !Sword.GetComponent<SwordController>().isWalking) Sword.SendMessage("Walking");
@@ -159,7 +162,7 @@ public class PlayerController : MonoBehaviour
             oHitFlash.GetComponent<Image>().color = Color.cyan;
             if (shielded)
             {
-                if (Prayer) if (prayercharges == 0) { Unshield(); }
+                if (Prayer) if (prayercharges == 0) { Unshield();  return; }
                 if (Prayer) if (prayercharges > 0) { prayercharges--; return; }
                 if (!Prayer) { Unshield(); }
             }
@@ -206,8 +209,8 @@ public class PlayerController : MonoBehaviour
     private void Empower() { empowered = true; Sword.SendMessage("SetEmpoweredMat"); }
 
     private void UnEmpower() { empowered = false; Sword.SendMessage("SetNormalMat"); UiController.SendMessage("EmpowerEnded"); }
-    private void ShieldMe() { shielded = true; ShieldedBar.SetActive(true); }
-    private void Unshield() { shielded = false; ShieldedBar.SetActive(false); UiController.SendMessage("ShieldEnded"); }
+    private void ShieldMe() { shielded = true; ShieldedBar.SetActive(true); if (Prayer) prayercharges = 1; }
+    private void Unshield() { shielded = false; ShieldedBar.SetActive(false); UiController.SendMessage("ShieldEnded");prayercharges = 1; }
 
     private void LevelUp()
     {
@@ -220,7 +223,14 @@ public class PlayerController : MonoBehaviour
         targetexpCalc = 0;
         totalExpNeeded = levelupExps[myLevel];
     }
-    
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag == "EndPortal")
+        {
+            SceneManager.LoadScene(3);
+        }
+    }
     public void PoisonSelect() { Poison = true; level1.SetActive(false); Cursor.visible = false; }
     public void StoneSkinSelect() { StoneSkin = true; StoneSkinReduction = 2.5f; level1.SetActive(false); Cursor.visible = false; }
     public void GiftSelect() { Gift = true; level1.SetActive(false); Cursor.visible = false; UiController.SendMessage("GiftSelect"); }
