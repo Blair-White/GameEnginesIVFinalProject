@@ -191,7 +191,7 @@ public class PlayerController : MonoBehaviour
         if(Poison)
         {
             enemy.SendMessage("Poisoned");
-            Soundmanager.instance.PlaySoundOneShot(Soundmanager.instance.MonsterHit, .5f);
+            //Soundmanager.instance.PlaySoundOneShot(Soundmanager.instance.MonsterHit, .5f);
         }
 
         
